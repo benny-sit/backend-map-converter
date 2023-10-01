@@ -1,27 +1,27 @@
-import { STATUS_CODES } from "http";
-import { redisClient } from "../../databases/redis.js";
-import getSetConversion from "./getSetConversion.js";
-import { ALL_CURRENCIES } from "../../utils/constants.js";
+import { STATUS_CODES } from 'http';
+import { redisClient } from '../../databases/redis.js';
+import getSetConversion from './getSetConversion.js';
+import { ALL_CURRENCIES } from '../../utils/constants.js';
 
 export default function (api, opts, done) {
-  api.addHook("preHandler", async (req, res) => {
-    console.log("PRE HANDLER");
+  api.addHook('preHandler', async (req, res) => {
+    console.log('PRE HANDLER');
   });
 
   api.route({
-    method: "GET",
-    url: "/:baseCurrency",
+    method: 'GET',
+    url: '/:baseCurrency',
     schema: {
       params: {
-        type: "object",
-        required: ["baseCurrency"],
+        type: 'object',
+        required: ['baseCurrency'],
         properties: {
-          baseCurrency: { type: "string", enum: ALL_CURRENCIES },
+          baseCurrency: { type: 'string', enum: ALL_CURRENCIES },
         },
       },
     },
     handler: async (req, res) => {
-      const baseCurrency = (req.params.baseCurrency || "").toUpperCase();
+      const baseCurrency = (req.params.baseCurrency || '').toUpperCase();
 
       let conversionRates = {};
       try {

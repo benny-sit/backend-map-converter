@@ -1,6 +1,6 @@
-import { redisClient } from "../../databases/redis.js";
-import { shuffleArray } from "../../utils/arrays.js";
-import { ALL_CURRENCIES } from "../../utils/constants.js";
+import { redisClient } from '../../databases/redis.js';
+import { shuffleArray } from '../../utils/arrays.js';
+import { ALL_CURRENCIES } from '../../utils/constants.js';
 
 const AVAILABLE_API_KEYS = [
   process.env.EXCHANGE_RATE_API_KEY_1,
@@ -21,10 +21,10 @@ async function tryMultipleApiKeys(baseCurrency) {
     if (!apiKey) continue;
 
     const url = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${(
-      baseCurrency || ""
+      baseCurrency || ''
     ).toUpperCase()}`;
 
-    const ans = await fetch(url).then(res => res.json());
+    const ans = await fetch(url).then((res) => res.json());
 
     if (ans.result === 'success') {
       conversionRates = ans.conversion_rates;
@@ -38,22 +38,21 @@ async function tryMultipleApiKeys(baseCurrency) {
 }
 
 export default async function (baseCurrency) {
-  
   const redisKey = `conversion${baseCurrency}`;
 
   const existingRates = await redisClient.hGetAll(redisKey);
-  
+
   if (existingRates && Object.keys(existingRates).length !== 0) {
-    console.log("---- CACHE HIT ----")
+    console.log('---- CACHE HIT ----');
     return existingRates;
-  } 
+  }
 
   const conversionRates = await tryMultipleApiKeys(baseCurrency);
 
   await Promise.all([
     redisClient.hSet(redisKey, conversionRates),
-    redisClient.expireAt(redisKey, parseInt((+new Date)/1000) + TTL_SECONDS)
-  ])
+    redisClient.expireAt(redisKey, parseInt(+new Date() / 1000) + TTL_SECONDS),
+  ]);
 
   return conversionRates;
 }
