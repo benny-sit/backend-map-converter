@@ -13,6 +13,10 @@ app.addHook('onClose', function () {
 
 app.register(cors, { origin: '*' });
 
+app.get('/', function (req, res) {
+  return { hello: 'world' };
+});
+
 app.register(conversion, { prefix: '/conversion' });
 
 const start = async () => {
