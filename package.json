@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node api/index.js",
+    "start:windows": "set NODE_ENV=production && node api/index.js",
     "dev": "nodemon api/index.js",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "prepare": "husky install"

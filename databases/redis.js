@@ -1,9 +1,17 @@
 import { createClient } from 'redis';
+import 'dotenv/config';
 
-export const redisClient = createClient()
-  .on('error', err => console.log('Redis Client Error', err))
+const url =
+  process.env.IS_REDIS_REMOTE.trim() === 'true' ? process.env.REDIS_URL : '';
 
-export const redisConnect = async () => await redisClient.connect();
+export const redisClient = createClient({
+  url,
+}).on('error', (err) => console.log('Redis Client Error', err));
+
+export const redisConnect = async () => {
+  await redisClient.connect();
+  console.log('---- Redis Connect Successful ' + url + ' ----');
+};
 
 // TO CHECK
 // await client.set('key1', 'value');
