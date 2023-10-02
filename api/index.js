@@ -4,6 +4,7 @@ import cors from '@fastify/cors';
 import { redisConnect } from '../databases/redis.js';
 
 import conversion from './conversion/index.js';
+import news from './news/index.js';
 
 const app = fastify({ logger: true });
 
@@ -18,6 +19,7 @@ app.get('/', function (req, res) {
 });
 
 app.register(conversion, { prefix: '/conversion' });
+app.register(news, { prefix: '/news' });
 
 const start = async () => {
   const port = process.env.PORT || 3000;
